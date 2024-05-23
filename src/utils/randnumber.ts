@@ -23,7 +23,7 @@ let zrng = [
   364849192,2049576050, 638580085, 547070247
 ];
 
-function lcgrand(stream: number) {
+export function lcgrand(stream: number) {
   let zi, lowprd, hi31;
 
   zi = zrng[stream];
@@ -41,10 +41,10 @@ function lcgrand(stream: number) {
   return (zi >> 7 | 1) / 16777216.0;
 }
 
-function lcgrandst(zset:number, stream:number) {
+export function lcgrandst(zset:number, stream:number) {
   zrng[stream] = zset;
 }
 
-function lcgrandgt(stream:number) {
+export function lcgrandgt(stream:number) {
   return zrng[stream];
 }
