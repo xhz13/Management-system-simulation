@@ -21,17 +21,28 @@ var num_custs_delayed:number = 0;
 var total_of_delays:number =  0.0;
 var area_num_in_q:number = 0.0;
 var area_server_status:number = 0.0;
-var num_custs_delayed:number = 0;
 
 var mean_service:number;
 var next_event_type:number;
 var mean_interarrival:number;
 
 export function mm1(num_delays_required:number,mean_interarrival_in:number,mean_service_in:number): number[]{
+
+    sim_time = 0.0;
+    server_status = EventType.IDLE;
+    num_in_q = 0;
+    time_last_event = 0.0;
+    num_custs_delayed = 0;
+    total_of_delays = 0.0;
+    area_num_in_q = 0.0;
+    area_server_status = 0.0;
+
     mean_interarrival = mean_interarrival_in;
     mean_service = mean_service_in;
+
     time_next_event[1] = sim_time + expon(mean_interarrival);
     time_next_event[2] = 1.0e+30;
+
     while(num_custs_delayed<num_delays_required){
         timing();
         update_time_avg_stats();
@@ -49,9 +60,9 @@ export function mm1(num_delays_required:number,mean_interarrival_in:number,mean_
 
 
 function timing(){ /* Timing function. */
-    var min_time_next_event:number=1.0e+29;
+    var min_time_next_event:number=Number.MAX_VALUE;
     var i:number = 0;
-
+    next_event_type = 0;
     /* Determine the event type of the next event to occur. */
 
     for(i=1;i<=num_events;i++){
@@ -78,11 +89,13 @@ function timing(){ /* Timing function. */
 
 
 function arrive(){ /* Arrival event function. */
-    var delay:number;
+    var delay:number = 0;
 
      /* Schedule next arrival. */
 
+    let test = expon(mean_interarrival);
     time_next_event[1] = sim_time + expon(mean_interarrival);
+
 
      /* Check to see whether server is busy. */
 
@@ -93,7 +106,7 @@ function arrive(){ /* Arrival event function. */
         ++num_in_q;
 
         /* Check to see whether an overflow condition exists. */
-        if(num_in_q>num_events){
+        if(num_in_q>Q_LIMIT.LENGTH){
             /* The queue has overflowed, so stop the simulation. */
             console.log("Overflow of the array time_arrival at");
             console.log("time "+sim_time);
@@ -125,7 +138,7 @@ function arrive(){ /* Arrival event function. */
 
 
 function depart(){ /* Departure event function. */
-    var delay:number;
+    var delay:number=0;
     var i:number=0;
 
     /* Check to see whether the queue is empty. */
@@ -135,7 +148,7 @@ function depart(){ /* Departure event function. */
            departure (service completion) event from consideration. */
 
         server_status = EventType.IDLE;
-        time_next_event[2] = 1.0e+30;
+        time_next_event[2] = Number.MAX_VALUE;
     }
 
     else{
@@ -152,6 +165,7 @@ function depart(){ /* Departure event function. */
 
         /* Increment the number of customers delayed, and schedule departure. */
         ++num_custs_delayed;
+        let test2 = expon(mean_service);
         time_next_event[2] = sim_time + expon(mean_service);
         
          /* Move each customer in queue (if any) up one place. */
@@ -164,7 +178,7 @@ function depart(){ /* Departure event function. */
 
 
 function update_time_avg_stats(){ /* Update area accumulators for time-average statistics. */
-    var time_since_last_event:number;
+    var time_since_last_event:number = 0;
 
     /* Compute time since last event, and update last-event-time marker. */
     time_since_last_event = sim_time - time_last_event;
