@@ -41,6 +41,12 @@ const handleMouseOut = () => {
         </div>
             <el-button type="primary"  @click="updateResults" >Calculate!</el-button>
         </div>
+        <div class="container">
+            <p>Average delay in queue: {{ Average_delay }}</p>
+            <p>Average number in queue: {{ Average_number }}</p>
+            <p>Server utilization: {{ Server_utilization }}</p>
+            <p>Simulation ended: {{ simulation_ended }}</p>
+        </div>
     </div>
 </template>
 
