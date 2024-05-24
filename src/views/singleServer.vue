@@ -14,9 +14,19 @@ const simulation_ended = ref(0);
 
 
 const updateResults = () => {
-  [Average_delay.value, Average_number.value, Server_utilization.value, simulation_ended.value] = mm1(num_delays_required.value, mean_interarrival_in.value, mean_service_in.value);
+  try {
+    console.log('mm1 function start');
+    [Average_delay.value, Average_number.value, Server_utilization.value, simulation_ended.value] = mm1(+num_delays_required.value, +mean_interarrival_in.value, +mean_service_in.value);
+    // 打印结果
+    console.log('Average_delay:', Average_delay.value);
+    console.log('Average_number:', Average_number.value);
+    console.log('Server_utilization:', Server_utilization.value);
+    console.log('simulation_ended:', simulation_ended.value);
+    console.log('mm1 function end');
+  } catch (error) {
+    console.error('An error occurred:', error);
+  }
 };
-
 
 const text = ref('Server Experiment');
 const handleMouseOver = () => {
