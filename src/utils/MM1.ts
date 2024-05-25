@@ -1,5 +1,6 @@
 import { FunnelChart } from 'echarts/charts';
 import { lcgrand } from './randnumber';
+import { ar, de } from 'element-plus/es/locales.mjs';
 
 enum EventType {
     BUSY = 1,
@@ -26,7 +27,11 @@ var mean_service:number;
 var next_event_type:number;
 var mean_interarrival:number;
 
-export function mm1(num_delays_required:number,mean_interarrival_in:number,mean_service_in:number): number[]{
+var arrival_times: number[] = [];
+var departure_times: number[] = [];
+var delay_times: number[] = [];
+
+export function mm1(num_delays_required:number,mean_interarrival_in:number,mean_service_in:number): (number | number[])[]{
 
     sim_time = 0.0;
     server_status = EventType.IDLE;
@@ -39,9 +44,11 @@ export function mm1(num_delays_required:number,mean_interarrival_in:number,mean_
 
     mean_interarrival = mean_interarrival_in;
     mean_service = mean_service_in;
-
+    arrival_times= [];
+    departure_times= [];
+    delay_times = [];
     time_next_event[1] = sim_time + expon(mean_interarrival);
-    time_next_event[2] = 1.0e+30;
+    time_next_event[2] = Number.MAX_VALUE;
 
     while(num_custs_delayed<num_delays_required){
         timing();
@@ -55,7 +62,7 @@ export function mm1(num_delays_required:number,mean_interarrival_in:number,mean_
                 break;
         }
     }
-    return [total_of_delays / num_custs_delayed, area_num_in_q / sim_time, area_server_status / sim_time, sim_time];
+    return [total_of_delays / num_custs_delayed, area_num_in_q / sim_time, area_server_status / sim_time, sim_time,arrival_times,departure_times,delay_times];
 }
 
 
@@ -93,8 +100,8 @@ function arrive(){ /* Arrival event function. */
 
      /* Schedule next arrival. */
 
-    let test = expon(mean_interarrival);
     time_next_event[1] = sim_time + expon(mean_interarrival);
+    arrival_times.push(time_next_event[1]);
 
 
      /* Check to see whether server is busy. */
@@ -125,6 +132,7 @@ function arrive(){ /* Arrival event function. */
            the results of the simulation.) */
         delay = 0.0;
         total_of_delays += delay;
+        delay_times.push(delay);
 
         /* Increment the number of customers delayed, and make server busy. */
         ++num_custs_delayed;
@@ -132,6 +140,7 @@ function arrive(){ /* Arrival event function. */
 
          /* Schedule a departure (service completion). */
         time_next_event[2] = sim_time + expon(mean_service);
+        departure_times.push(time_next_event[2]);
     }
 
 }
@@ -146,7 +155,6 @@ function depart(){ /* Departure event function. */
     if(num_in_q==0){
         /* The queue is empty so make the server idle and eliminate the
            departure (service completion) event from consideration. */
-
         server_status = EventType.IDLE;
         time_next_event[2] = Number.MAX_VALUE;
     }
@@ -162,11 +170,12 @@ function depart(){ /* Departure event function. */
 
         delay = sim_time - time_arrival[1];
         total_of_delays += delay;
+        delay_times.push(delay);
 
         /* Increment the number of customers delayed, and schedule departure. */
         ++num_custs_delayed;
-        let test2 = expon(mean_service);
         time_next_event[2] = sim_time + expon(mean_service);
+        departure_times.push(time_next_event[2]);
         
          /* Move each customer in queue (if any) up one place. */
         for(i=1;i<=num_in_q;i++){
@@ -196,13 +205,12 @@ function update_time_avg_stats(){ /* Update area accumulators for time-average s
 function expon(mean: number): number   /* Exponential variate generation function. */
 {
     /* Return an exponential random variate with mean "mean". */
-    return -mean * Math.log(lcgrand(1));
+    const result = -mean * Math.log(lcgrand(1));
+
+    // console.log(result);  // 打印结果到控制台
+
+    return result;
 }
-
-
-
-
-
 
 
 

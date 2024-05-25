@@ -5,7 +5,7 @@ import  {calculate} from '../utils/thorwCoinsCalulate';
 import headBar from '../components/headBar.vue';
 const handleClick = () => {
     if (input4.value === null || input3.value === null||input1.value === null || input2.value === null) {
-        ElMessageBox.alert('请输入实验次数和实验差额', '错误');
+        ElMessageBox.alert('输入值不能为空', '错误');
         return;
     }
     let ave_count = calculate(input4.value,input3.value);
@@ -23,8 +23,8 @@ const input1 = ref(null)
 const input2 = ref(null)
 const input3 = ref(null)
 const input4 = ref(null)
-const output1 = ref('Expected frequency:')
-const output2 = ref('Expected reward:')
+const output1 = ref('Expected frequency: 0')
+const output2 = ref('Expected reward: 0')
 const hasResult = ref(false) // 判断是否是第一次实验
 const records = ref<string[]>([]) // 用于存储每次实验的记录
 const text = ref('Coin Flipping Experiment');
@@ -55,8 +55,8 @@ const handleMouseOut = () => {
             <el-button type="primary" @click="handleClick"> Calculate! </el-button>
         </div>
     <div>
-        <p :style="{ color: hasResult ? 'black' : 'lightgray' }">{{ output1 }}</p>
-        <p :style="{ color: hasResult ? 'black' : 'lightgray' }">{{ output2 }}</p>
+        <p :style="{ color: hasResult ? 'black' : 'lightgray' , fontSize: '14px'}">{{ output1 }}</p>
+        <p :style="{ color: hasResult ? 'black' : 'lightgray' , fontSize: '14px'}">{{ output2 }}</p>
         <div v-for="(record, index) in [...records].reverse()" :key="index">
             <p>{{ record }}</p>
         </div>
@@ -74,9 +74,12 @@ const handleMouseOut = () => {
     /* display: flex; */
     /* justify-content: center; */
     /* align-items: center; */
-    height: 500px; /* 这将使 .throwcoins 元素的高度等于视口的高度 */
     margin: 0 auto; /* 让元素水平居中 */
     width: 300px; /* 设置元素的宽度 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .container:hover {
@@ -90,7 +93,6 @@ const handleMouseOut = () => {
 }
 /* 让按钮居中 */
 .mb-4 {
-
     display: flex;
     justify-content: center;
     margin-top: 12px; /* 增加与上面元素的距离 */

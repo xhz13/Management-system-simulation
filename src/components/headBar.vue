@@ -7,12 +7,16 @@ const turnThrowCoins = () => {
 const turnSingleServer = () => {
   router.push('/singleServer')
 }
+const turnInventorySystem = () =>{
+  
+}
 </script>
 
 <template>
     <div class="head">
         <el-button type="primary"  @click="turnThrowCoins">抛硬币</el-button>
         <el-button type="primary"  @click="turnSingleServer">排队</el-button>
+        <el-button type="primary"  @click="turnInventorySystem">库存</el-button>
     </div>
 </template>
 
