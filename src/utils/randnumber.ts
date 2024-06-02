@@ -25,7 +25,6 @@ let zrng = [
 
 export function lcgrand(stream: number) {
   let zi, lowprd, hi31;
-
   zi = zrng[stream];
   lowprd = (zi & 65535) * MULT1;
   hi31 = (zi >> 16) * MULT1 + (lowprd >> 16);

@@ -7,6 +7,9 @@ const turnThrowCoins = () => {
 const turnSingleServer = () => {
   router.push('/singleServer')
 }
+const turnSingleServer2 = () =>{
+
+}
 const turnInventorySystem = () =>{
   
 }
@@ -14,14 +17,15 @@ const turnInventorySystem = () =>{
 
 <template>
     <div class="head">
-        <el-button type="primary"  @click="turnThrowCoins">抛硬币</el-button>
-        <el-button type="primary"  @click="turnSingleServer">排队</el-button>
-        <el-button type="primary"  @click="turnInventorySystem">库存</el-button>
+      <el-button type="primary"  @click="turnThrowCoins">抛硬币</el-button>
+      <el-button type="primary"  @click="turnSingleServer">排队</el-button>
+      <el-button type="primary"  @click="turnInventorySystem">库存</el-button>
     </div>
 </template>
 
 
 <style scoped>
+
 .head {
     display: flex;
     justify-content: center;
