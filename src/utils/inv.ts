@@ -1,10 +1,11 @@
+import type { number } from 'echarts/core';
 import { lcgrand } from './randnumber';
 
-var amount, bigs, initial_inv_level, inv_level, next_event_type, num_events,
-    num_months, num_values_demand, smalls;
-var area_holding, area_shortage, holding_cost, incremental_cost, maxlag,
-    mean_interdemand, minlag,  setup_cost,
-    shortage_cost, sim_time, time_last_event,total_ordering_cost;
+var amount:number, bigs:number,initial_inv_level:number, inv_level:number, next_event_type:number, num_events:number,
+    num_months:number, num_values_demand:number, smalls:number;
+var area_holding:number, area_shortage:number, holding_cost:number, incremental_cost:number, maxlag:number,
+    mean_interdemand:number, minlag:number,  setup_cost:number,
+    shortage_cost:number, sim_time:number, time_last_event:number,total_ordering_cost:number;
 var prob_distrib_demand: number[] = [26], time_next_event: number[] = [5];
 
 export function inv (num_policies:any){
@@ -29,7 +30,7 @@ export function inv (num_policies:any){
                     evaluate();
                     break;
                 case 3:
-                    report();
+                    // report();
                     break;
             }
         /* If the event just executed was not the end-simulation event (type 3),
@@ -53,9 +54,9 @@ function initialize(initial_inv_level:number,mean_interdemand:number,num_months:
     time_next_event[4] = 0.0;
 }
 
-function expon (mean_interdemand:number):number{
-    return 1;
-}
+// function expon (mean_interdemand:number):number{
+//     return 1;
+// }
 
 function timing()  /* Timing function. */
 {
@@ -101,7 +102,8 @@ function demand()  /* Demand event function. */
 {
     /* Decrement the inventory level by a generated demand size. */
 
-    inv_level -= random_integer(prob_distrib_demand);
+    //这里可能会出问题
+    inv_level -= randomInteger(prob_distrib_demand);
 
     /* Schedule the time of the next demand. */
 
@@ -135,7 +137,7 @@ function evaluate()  /* Inventory-evaluation event function. */
 function update_time_avg_stats()  /* Update area accumulators for time-average
                                      statistics. */
 {
-    float time_since_last_event;
+    let time_since_last_event;
 
     /* Compute time since last event, and update last-event-time marker. */
 
@@ -153,20 +155,18 @@ function update_time_avg_stats()  /* Update area accumulators for time-average
         area_holding  += inv_level * time_since_last_event;
 }
 
-function expon(float mean)  /* Exponential variate generation function. */
+function expon(mean: number): number   /* Exponential variate generation function. */
 {
     /* Return an exponential random variate with mean "mean". */
 
-    return -mean * log(lcgrand(1));
+    return -mean *  Math.log(lcgrand(1));
 }
 
 
-function random_integer(float prob_distrib[])  /* Random integer generation
+function  randomInteger(probDistrib: number[]): number{ /* Random integer generation
                                              function. */
-{
-    int   i;
-    float u;
-
+    let i = 1;
+    let u = lcgrand(1);
     /* Generate a U(0,1) random variate. */
 
     u = lcgrand(1);
@@ -174,8 +174,9 @@ function random_integer(float prob_distrib[])  /* Random integer generation
     /* Return a random integer in accordance with the (cumulative) distribution
        function prob_distrib. */
 
-    for (i = 1; u >= prob_distrib[i]; ++i)
-        ;
+    while (u >= probDistrib[i]) {
+        i++;
+    }
     return i;
 }
 

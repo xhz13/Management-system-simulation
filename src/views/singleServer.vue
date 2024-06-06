@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import  { nextTick,onMounted,ref,watchEffect } from 'vue';
+import  { computed, nextTick,onMounted,ref,watchEffect } from 'vue';
 import headBar from '../components/headBar.vue';
 import { mm1 } from '../utils/MM1';
 import { ElMessageBox } from 'element-plus';
@@ -38,6 +38,8 @@ const checked1 = ref(false)
 const checked2 = ref(false)
 const checked3 = ref(false)
 
+var lastRandomSeed: number | undefined = undefined;
+
 const randomSeed = ref<number | undefined>();
 const queueLength = ref<number | undefined>();
 const updateResults = () => {
@@ -49,7 +51,7 @@ const updateResults = () => {
       return;
     }
   else {
-    lcgrandst(randomSeed.value,1);
+        lcgrandst(randomSeed.value,1);
     }
   }
   if(checked2.value == true||checked3.value == true){
@@ -121,7 +123,7 @@ const updateResults = () => {
           ElMessageBox.alert('输入值不能小于等于0', '错误');
       }
       else if(mean_interarrival_in.value<mean_service_in.value){
-          ElMessageBox.alert('服务时间不能小于到达时间', '错误');
+          ElMessageBox.alert('服务时间不能大于到达时间', '错误');
       }
       else {
         if(queueLength.value === undefined || isNaN(queueLength.value)) {
@@ -420,6 +422,7 @@ watchEffect(() => {
 
   const tableData = ref<Array<{ [key: string]: number | number[] }>>([]);
 
+
 </script>
 
 <template>
@@ -440,7 +443,7 @@ watchEffect(() => {
               <el-input v-model="queueLength" :disabled="!checked2" style="width: 120px" placeholder="Queue Length" />
             </div>
             <div >
-              <el-checkbox v-model="checked3" label="Option2" size="large" border />
+              <el-checkbox v-model="checked3" label="Opening hours" size="large" border />
               <el-select v-model="moringvalue" :disabled="!checked3" placeholder="Select" size="large" style="width: 240px">
                 <el-option v-for="item in myoptions1" :key="item.value" :label="item.label" :value="item.value" />
               </el-select>

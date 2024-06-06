@@ -47,3 +47,4 @@ export function lcgrandst(zset:number, stream:number) {
 export function lcgrandgt(stream:number) {
   return zrng[stream];
 }
+
