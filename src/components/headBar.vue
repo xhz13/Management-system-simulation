@@ -7,11 +7,8 @@ const turnThrowCoins = () => {
 const turnSingleServer = () => {
   router.push('/singleServer')
 }
-const turnSingleServer2 = () =>{
-
-}
 const turnInventorySystem = () =>{
-  
+  router.push('/inventorySystem') 
 }
 </script>
 
